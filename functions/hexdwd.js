@@ -13,7 +13,7 @@ exports.handler = async (event, context) => {
 			} else {
 				resolve({statusCode: 404})
 			}
-		}).on('error', err => { reject(Error(err)) })	// Only for testing
+		}).on('error', err => { reject() })
 	})
 	
 	return promise
