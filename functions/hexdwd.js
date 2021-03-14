@@ -1,29 +1,19 @@
 const https = require("https")
 
-exports.handler = async function(event, context) {
+exports.handler = async (event, context) => {
 	const url = event.body
 	
 	const promise = new Promise(function(resolve, reject) {
-		https.get(url, function(response) {
+		https.get(url, response => {
 			if (response.statusCode === 200) {
-				let data = "";
-				response.setEncoding("hex");
-				response.on("data", function(chunk) {
-					data += chunk;
-				});
-				response.on("end", function() {
-					let result = {
-						statusCode: 200,
-						body: data
-					}
-					resolve(result)
-				});
+				let data = ""
+				response.setEncoding("hex")
+				response.on("data", chunk => { data += chunk })
+				response.on("end", () => { resolve({statusCode: 200, body: data}) })
 			} else {
-				resolve(response.statusCode)
+				resolve({statusCode: 404})
 			}
-		}).on('error', (e) => {
-			reject(Error(e))
-		})
+		}).on('error', err => { reject(Error(err)) })	// Only for testing
 	})
 	
 	return promise
