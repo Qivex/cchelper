@@ -17,6 +17,6 @@ exports.handler = async (event, context) => {
 		})
 		return promise
 	} catch (e) {
-		return {statusCode: 404}
+		return {statusCode: 404, body: e.toString()}
 	}
 }
