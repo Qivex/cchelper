@@ -12,7 +12,7 @@ exports.handler = async function(event, context) {
 					response.on("data", chunk => { data += chunk })
 					response.on("end", () => { resolve({statusCode: 200, body: data}) })
 				} else {
-					resolve({statusCode: 404})
+					resolve({statusCode: response.statusCode, body: response.body})
 				}
 			}
 			if (url.protocol === "https") {
@@ -23,6 +23,6 @@ exports.handler = async function(event, context) {
 		})
 		return promise
 	} catch (e) {
-		return {statusCode: 404}
+		return {statusCode: 404, body: e.toString()}
 	}
 }
