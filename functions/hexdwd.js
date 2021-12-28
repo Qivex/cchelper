@@ -1,10 +1,11 @@
+const http = require("http")
 const https = require("https")
 
-exports.handler = async (event, context) => {
+exports.handler = async function(event, context) {
 	try {
 		const url = new URL(event.body)
 		const promise = new Promise(function(resolve, reject) {
-			https.get(url, response => {
+			function callback(response) {
 				if (response.statusCode === 200) {
 					let data = ""
 					response.setEncoding("hex")
@@ -13,7 +14,12 @@ exports.handler = async (event, context) => {
 				} else {
 					resolve({statusCode: 404})
 				}
-			})
+			}
+			if (url.protocol === "https") {
+				https.get(url, callback)
+			} else {
+				http.get(url, callback)
+			}
 		})
 		return promise
 	} catch (e) {
